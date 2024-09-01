@@ -16,32 +16,18 @@ class RedisClient {
   }
 
   async get(key) {
-    try {
-      const getAsync = promisify(this.client.get).bind(this.client);
-      const value = await getAsync(key);
-      return value;
-    } catch (error) {
-      console.error('Get failed:', error);
-      return null;
-    }
+    const value = await this.client.get(key);
+    return value;
   }
 
   async set(key, value, duration) {
-    try {
-      await this.client.set(key, value, {
-        EX: duration, // Expiration time in seconds
-      });
-    } catch (error) {
-      console.error('Set failed:', error);
-    }
+    await this.client.set(key, value, {
+      EX: duration, // Expiration time in seconds
+    });
   }
 
   async del(key) {
-    try {
-      await this.client.del(key);
-    } catch (error) {
-      console.error('Delete failed:', error);
-    }
+    await this.client.del(key);
   }
 }
 
