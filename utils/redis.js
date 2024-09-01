@@ -17,7 +17,8 @@ class RedisClient {
 
   async get(key) {
     try {
-      const value = await this.client.get(key);
+      const getAsync = promisify(this.client.get).bind(this.client);
+      const value = await getAsync(key);
       return value;
     } catch (error) {
       console.error('Get failed:', error);
