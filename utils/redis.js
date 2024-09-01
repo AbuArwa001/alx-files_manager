@@ -5,10 +5,10 @@ class RedisClient {
     this.client = createClient();
 
     // Attach the error event listener
-    this.client.on('error', (err) => console.log(err.code));
+    this.client.on('error', (err) => console.log(err));
 
     // Explicitly connect to Redis
-    this.client.connect().catch((err) => console.error('Connection error:', err));
+    this.client.connect();
   }
 
   isAlive() {
