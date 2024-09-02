@@ -5,10 +5,10 @@ class RedisClient {
     this.client = createClient();
 
     // Attach the error event listener
-    this.client.on('error', (err) => console.log(err));
+    this.client.on('error', (err) => console.log(err.code));
 
     // Explicitly connect to Redis
-    this.client.connect();
+    this.client.connect().catch((err) => console.error('Connection error:', err));
   }
 
   isAlive() {
@@ -16,18 +16,22 @@ class RedisClient {
   }
 
   async get(key) {
-    const value = await this.client.get(key);
-    return value;
+      const value = await this.client.get(key);
+      return value;
   }
 
   async set(key, value, duration) {
-    await this.client.set(key, value, {
-      EX: duration, // Expiration time in seconds
-    });
+  await this.client.set(key, value, {
+    EX: duration, // Expiration time in seconds
+  });
   }
 
   async del(key) {
-    await this.client.del(key);
+    try {
+      await this.client.del(key);
+    } catch (error) {
+      console.error('Delete failed:', error);
+    }
   }
 }
 
