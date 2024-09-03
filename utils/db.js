@@ -59,6 +59,35 @@ class DBClient {
     const user = await users.findOne({ email, password });
     return user;
   }
+
+  async getFile(parentId) {
+    if (!this.connected) {
+      throw new Error('MongoDB client is not connected');
+    }
+    const files = this.db.collection('files');
+    const pId = new ObjectId(parentId);
+    const file = await files.findOne({ _id: pId });
+    return file;
+  }
+
+  async createFile({
+    userId,
+    name, type, parentId, isPublic,
+  }) {
+    if (!this.connected) {
+      throw new Error('MongoDB client is not connected');
+    }
+    const files = this.db.collection('files');
+    const newFile = {
+      userId,
+      name,
+      type,
+      parentId,
+      isPublic,
+    };
+    const result = await files.insertOne(newFile);
+    return result;
+  }
 }
 
 const dbClient = new DBClient();
