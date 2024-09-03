@@ -78,7 +78,7 @@ These tests cover the overall functionality of the system, simulating real-world
 
 ```bash
 npm run start-server
-``
+```
 ## 🎈 Usage <a name="usage"></a>
 * To use the system:
 
