@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 class DBClient {
   constructor() {
@@ -39,6 +39,25 @@ class DBClient {
     const files = this.db.collection('files');
     const fileCount = await files.countDocuments({});
     return fileCount;
+  }
+
+  async getUserById(userId) {
+    if (!this.connected) {
+      throw new Error('MongoDB client is not connected');
+    }
+    const users = this.db.collection('users');
+    const objectId = new ObjectId(userId);
+    const user = await users.findOne({ _id: objectId });
+    return user;
+  }
+
+  async findUserByEmailAndPassword(email, password) {
+    if (!this.connected) {
+      throw new Error('MongoDB client is not connected');
+    }
+    const users = this.db.collection('users');
+    const user = await users.findOne({ email, password });
+    return user;
   }
 }
 
