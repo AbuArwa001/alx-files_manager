@@ -66,6 +66,7 @@ class DBClient {
     }
     const files = this.db.collection('files');
     const id = new ObjectId(fileId);
+
     const file = await files.findOne({ _id: id });
     return file;
   }
@@ -87,7 +88,7 @@ class DBClient {
 
   async createFile({
     userId,
-    name, type, parentId, isPublic,
+    name, type, parentId, isPublic, localPath,
   }) {
     if (!this.connected) {
       throw new Error('MongoDB client is not connected');
@@ -99,6 +100,7 @@ class DBClient {
       type,
       parentId,
       isPublic,
+      localPath,
     };
     const result = await files.insertOne(newFile);
     return result;

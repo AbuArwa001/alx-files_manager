@@ -26,6 +26,19 @@ class UsersController {
     }
   }
 
+  static async getUserbyToken(token) {
+    const key = `auth_${token}`;
+    const userId = await redisClient.get(key);
+    if (!userId) {
+      return null;
+    }
+    const user = await dbClient.getUserById(userId);
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
+
   static async me(req, res) {
     const token = req.headers['x-token'];
 
@@ -41,8 +54,6 @@ class UsersController {
     }
 
     const user = await dbClient.getUserById(userId);
-    console.log(user);
-
     if (!user) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
