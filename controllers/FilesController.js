@@ -4,6 +4,8 @@ import { v4 as uuid4 } from 'uuid'; // Import the 'v4' function from the 'uuid' 
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
+const mime = require('mime-types');
+
 class FilesController {
   static async postUpload(req, res) {
     const token = req.headers['X-Token'];
@@ -138,6 +140,38 @@ class FilesController {
       }
       await dbClient.unpublishFile(id);
       return res.status(200).json({ id: file._id, ...file, isPublic: false });
+    } catch (error) {
+      console.error('Error getting file:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
+  static async getFile(req, res) {
+    const token = req.headers['X-Token'];
+    const { id } = req.params;
+
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    try {
+      const file = await dbClient.getFile(id);
+      if (!file) {
+        return res.status(404).json({ error: 'Not found' });
+      }
+      const key = `auth_${token}`;
+      const userId = await redisClient.get(key);
+      if (file.isPublic === false && file.userId !== userId) {
+        return res.status(404).json({ error: 'Not found' });
+      }
+      if (file.type === 'folder') {
+        return res.status(400).json({ error: 'A folder doesn\'t have content' });
+      }
+      if (!fs.existsSync(file.localPath)) {
+        return res.status(404).json({ error: 'Not found' });
+      }
+      const data = fs.readFileSync(file.localPath);
+      const mimeType = mime.lookup(file.name);
+      return res.status(200).send(data).set('Content-Type', mimeType);
     } catch (error) {
       console.error('Error getting file:', error);
       return res.status(500).json({ error: 'Internal Server Error' });
