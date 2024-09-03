@@ -1,83 +1,114 @@
-# 0x04. Files Manager
+<p align="center">
+  <a href="" rel="noopener">
+ <img width=200px height=200px src="https://i.imgur.com/6wj0hh6.jpg" alt="Project logo"></a>
+</p>
 
-This project is a culmination of the back-end trimester, combining topics such as authentication, Node.js, MongoDB, Redis, pagination, and background processing. The goal is to build a simple platform to upload and view files with the following features:
+<h3 align="center">files_manager</h3>
 
-- User authentication via a token
-- List all files
-- Upload a new file
-- Change permission of a file
-- View a file
-- Generate thumbnails for images
+<div align="center">
 
-You will be guided step by step to build this platform, but you have some freedom in implementation, including file organization (consider using a `utils` folder).
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 
-This project simulates a real-world service for learning purposes, allowing you to assemble various components into a complete product.
+</div>
 
-**Enjoy!**
+---
 
-## Resources
+<p align="center"> Few lines describing your project.
+    <br> 
+</p>
 
-Read or watch:
+## 📝 Table of Contents
 
-- Node.js getting started
-- Process API doc
-- Express getting started
-- Mocha documentation
-- Nodemon documentation
-- MongoDB
-- Bull
-- Image thumbnail
-- Mime-Types
-- Redis
+- [About](#about)
+- [Getting Started](#getting_started)
+- [Deployment](#deployment)
+- [Usage](#usage)
+- [Built Using](#built_using)
+- [TODO](../TODO.md)
+- [Contributing](../CONTRIBUTING.md)
+- [Authors](#authors)
+- [Acknowledgments](#acknowledgement)
 
-## Learning Objectives
+## 🧐 About <a name = "about"></a>
 
-By the end of this project, you should be able to explain the following without using Google:
+Write about 1-2 paragraphs describing the purpose of your project.
 
-- How to create an API with Express
-- How to authenticate a user
-- How to store data in MongoDB
-- How to store temporary data in Redis
-- How to set up and use a background worker
+## 🏁 Getting Started <a name = "getting_started"></a>
 
-## Requirements
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
-- Allowed editors: `vi`, `vim`, `emacs`, `Visual Studio Code`
-- All files will be interpreted/compiled on Ubuntu 18.04 LTS using Node.js (version 12.x.x)
-- All files should end with a new line
-- A `README.md` file at the root of the project folder is mandatory
-- Your code should use the `.js` extension
-- Your code will be verified against lint using ESLint
+### Prerequisites
 
-## Provided Files
+What things you need to install the software and how to install them.
 
-Make sure to run `$ npm install` after you have the `package.json`.
-
-## Tasks
-
-### 0. Redis Utils
-
-Create a file `redis.js` inside the `utils` folder containing the `RedisClient` class. This class should have the following:
-
-- Constructor that creates a client to Redis and handles errors.
-- `isAlive()` method to check if the Redis connection is successful.
-- `get()` method to retrieve a value by key.
-- `set()` method to store a value by key with an expiration.
-- `del()` method to delete a value by key.
-
-Example usage:
-
-```javascript
-import redisClient from "./utils/redis";
-
-(async () => {
-  console.log(redisClient.isAlive());
-  console.log(await redisClient.get("myKey"));
-  await redisClient.set("myKey", 12, 5);
-  console.log(await redisClient.get("myKey"));
-
-  setTimeout(async () => {
-    console.log(await redisClient.get("myKey"));
-  }, 1000 * 10);
-})();
 ```
+Give examples
+```
+
+### Installing
+
+A step by step series of examples that tell you how to get a development env running.
+
+Say what the step will be
+
+```
+Give the example
+```
+
+And repeat
+
+```
+until finished
+```
+
+End with an example of getting some data out of the system or using it for a little demo.
+
+## 🔧 Running the tests <a name = "tests"></a>
+
+Explain how to run the automated tests for this system.
+
+### Break down into end to end tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+### And coding style tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+## 🎈 Usage <a name="usage"></a>
+
+Add notes about how to use the system.
+
+## 🚀 Deployment <a name = "deployment"></a>
+
+Add additional notes about how to deploy this on a live system.
+
+## ⛏️ Built Using <a name = "built_using"></a>
+
+- [MongoDB](https://www.mongodb.com/) - Database
+- [Express](https://expressjs.com/) - Server Framework
+- [VueJs](https://vuejs.org/) - Web Framework
+- [NodeJs](https://nodejs.org/en/) - Server Environment
+
+## ✍️ Authors <a name = "authors"></a>
+
+- [@kylelobo](https://github.com/kylelobo) - Idea & Initial work
+
+See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
+
+## 🎉 Acknowledgements <a name = "acknowledgement"></a>
+
+- Hat tip to anyone whose code was used
+- Inspiration
+- References

@@ -23,6 +23,7 @@
         "mongodb": "6.8",
         "redis": "^4.7.0",
         "sha1": "^1.1.1",
+        "supertest": "^7.0.0",
         "uuid": "^8.2.0"
     },
     "devDependencies": {

@@ -1,9 +1,27 @@
 import Bull from 'bull';
-import imageThumbnail from 'image-thumbnail';
 import path from 'path';
 import fs from 'fs';
+import imageThumbnail from 'image-thumbnail';
 import dbClient from './utils/db';
-import { log } from 'console';
+
+const userQueue = new Bull('userQueue');
+
+userQueue.process(async (job) => {
+  const { userId } = job.data;
+
+  if (!userId) {
+    throw new Error('Missing userId');
+  }
+
+  // Retrieve the user from DB based on userId
+  const user = await dbClient.getUserById(userId);
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  // Simulate sending a welcome email
+  console.log(`Welcome ${user.email}!`);
+});
 
 const fileQueue = new Bull('fileQueue');
 

@@ -2,6 +2,9 @@ import crypto from 'crypto';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
+const Bull = require('bull');
+
+const userQueue = new Bull('userQueue');
 class UsersController {
   static async postNew(req, res) {
     const { email, password } = req.body;
@@ -12,13 +15,19 @@ class UsersController {
       if (!password) {
         return res.status(400).json({ error: 'Missing password' });
       }
+
       const coll = dbClient.db.collection('users');
       const user = await coll.findOne({ email });
       if (user) {
         return res.status(400).json({ error: 'Already exist' });
       }
-      const passwordHash = crypto.createHash('sha1').update(req.body.password).digest('hex');
+
+      const passwordHash = crypto.createHash('sha1').update(password).digest('hex');
       const newUser = await coll.insertOne({ email, password: passwordHash });
+
+      // Add the job to the queue
+      userQueue.add({ userId: newUser.insertedId });
+
       return res.status(201).json({ id: newUser.insertedId, email });
     } catch (error) {
       console.error('Error creating new user:', error);
