@@ -3,6 +3,7 @@ import imageThumbnail from 'image-thumbnail';
 import path from 'path';
 import fs from 'fs';
 import dbClient from './utils/db';
+import { log } from 'console';
 
 const fileQueue = new Bull('fileQueue');
 
@@ -25,11 +26,13 @@ fileQueue.process(async (job) => {
 
   // Generate thumbnails
   const filePath = path.resolve(__dirname, file.localPath);
+  console.log(`Processing file: ${filePath}`);
   const sizes = [500, 250, 100];
 
   await Promise.all(sizes.map(async (width) => {
     const thumbnail = await imageThumbnail(filePath, { width });
-    const thumbnailPath = filePath.replace(/(\.\w+)$/, `_${width}$1`);
+    const thumbnailPath = filePath.concat(`_${width}`);
+    console.log(`Writing thumbnail to: ${thumbnailPath}`);
     fs.writeFileSync(thumbnailPath, thumbnail);
   }));
 });

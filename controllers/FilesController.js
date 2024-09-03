@@ -160,27 +160,42 @@ class FilesController {
   static async getFile(req, res) {
     const token = req.headers['x-token'];
     const { id } = req.params;
+    const { size } = req.query; // Get the size query parameter
 
     try {
       const file = await dbClient.getFile(id);
-      //   console.log(file);
+
       if (!file) {
         return res.status(404).json({ error: 'Not found' });
       }
+
       const key = `auth_${token}`;
       const userId = await redisClient.get(key);
+
       if (file.isPublic === false && file.userId !== userId) {
         return res.status(404).json({ error: 'Not found' });
       }
+
       if (file.type === 'folder') {
         return res.status(400).json({ error: 'A folder doesn\'t have content' });
       }
-      if (!fs.existsSync(file.localPath)) {
-        console.log(file.localPath);
-        return res.status(404).json({ error: 'Not found localpath' });
+
+      // Determine the file path based on size
+      let filePath = file.localPath;
+      if (size && ['100', '250', '500'].includes(size)) {
+        const sizeFilePath = `${file.localPath}_${size}`;
+        if (fs.existsSync(sizeFilePath)) {
+          filePath = sizeFilePath;
+        } else {
+          return res.status(404).json({ error: 'Not found' });
+        }
+      } else if (!fs.existsSync(filePath)) {
+        return res.status(404).json({ error: 'Not found' });
       }
-      const data = fs.readFileSync(file.localPath);
+
+      const data = fs.readFileSync(filePath);
       const mimeType = mime.lookup(file.name);
+
       return res.status(200).send(data).set('Content-Type', mimeType);
     } catch (error) {
       console.error('Error getting file:', error);
