@@ -60,14 +60,29 @@ class DBClient {
     return user;
   }
 
-  async getFile(parentId) {
+  async getFile(fileId) {
     if (!this.connected) {
       throw new Error('MongoDB client is not connected');
     }
     const files = this.db.collection('files');
-    const pId = new ObjectId(parentId);
-    const file = await files.findOne({ _id: pId });
+    const id = new ObjectId(fileId);
+    const file = await files.findOne({ _id: id });
     return file;
+  }
+
+  async getFiles(parentId, page) {
+    if (!this.connected) {
+      throw new Error('MongoDB client is not connected');
+    }
+    const files = this.db.collection('files');
+    const query = parentId ? { parentId } : {};
+    const cursor = files.aggregate([
+      { $match: query },
+      { $skip: page > 0 ? ((page - 1) * 20) : 0 },
+      { $limit: 20 },
+    ]);
+    const filesList = await cursor.toArray();
+    return filesList;
   }
 
   async createFile({
