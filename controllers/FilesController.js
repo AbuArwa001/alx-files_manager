@@ -103,6 +103,46 @@ class FilesController {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+
+  static async putPublish(req, res) {
+    const token = req.headers['x-token'];
+    const { id } = req.params;
+
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    try {
+      const file = await dbClient.getFile(id);
+      if (!file) {
+        return res.status(404).json({ error: 'Not found' });
+      }
+      await dbClient.publishFile(id);
+      return res.status(200).json({ id: file._id, ...file, isPublic: true });
+    } catch (error) {
+      console.error('Error getting file:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
+  static async putUnpublish(req, res) {
+    const token = req.headers['x-token'];
+    const { id } = req.params;
+
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    try {
+      const file = await dbClient.getFile(id);
+      if (!file) {
+        return res.status(404).json({ error: 'Not found' });
+      }
+      await dbClient.unpublishFile(id);
+      return res.status(200).json({ id: file._id, ...file, isPublic: false });
+    } catch (error) {
+      console.error('Error getting file:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
 }
 
 export default FilesController;
