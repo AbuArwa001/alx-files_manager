@@ -6,7 +6,7 @@ import redisClient from '../utils/redis';
 
 class FilesController {
   static async postUpload(req, res) {
-    const token = req.headers['x-token'];
+    const token = req.headers['X-Token'];
     const folderPath = process.env.FOLDER_PATH || '/tmp/files_manager';
     const localPath = `${folderPath}/${uuid4()}`;
     const {
@@ -70,7 +70,7 @@ class FilesController {
   }
 
   static async getShow(req, res) {
-    const token = req.headers['x-token'];
+    const token = req.headers['X-Token'];
     const { id } = req.params;
 
     if (!token) {
@@ -89,7 +89,7 @@ class FilesController {
   }
 
   static async getIndex(req, res) {
-    const token = req.headers['x-token'];
+    const token = req.headers['X-Token'];
     const { parentId, page } = req.query;
 
     if (!token) {
@@ -105,7 +105,7 @@ class FilesController {
   }
 
   static async putPublish(req, res) {
-    const token = req.headers['x-token'];
+    const token = req.headers['X-Token'];
     const { id } = req.params;
 
     if (!token) {
@@ -125,7 +125,7 @@ class FilesController {
   }
 
   static async putUnpublish(req, res) {
-    const token = req.headers['x-token'];
+    const token = req.headers['X-Token'];
     const { id } = req.params;
 
     if (!token) {

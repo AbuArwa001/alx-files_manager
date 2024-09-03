@@ -103,6 +103,26 @@ class DBClient {
     const result = await files.insertOne(newFile);
     return result;
   }
+
+  async publishFile(fileId) {
+    if (!this.connected) {
+      throw new Error('MongoDB client is not connected');
+    }
+    const files = this.db.collection('files');
+    const id = new ObjectId(fileId);
+    const result = await files.updateOne({ _id: id }, { $set: { isPublic: true } });
+    return result;
+  }
+
+  async unpublishFile(fileId) {
+    if (!this.connected) {
+      throw new Error('MongoDB client is not connected');
+    }
+    const files = this.db.collection('files');
+    const id = new ObjectId(fileId);
+    const result = await files.updateOne({ _id: id }, { $set: { isPublic: false } });
+    return result;
+  }
 }
 
 const dbClient = new DBClient();
