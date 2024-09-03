@@ -71,6 +71,16 @@ class DBClient {
     return file;
   }
 
+  async getFileById(fileId, userId) {
+    if (!this.connected) {
+      throw new Error('MongoDB client is not connected');
+    }
+    const files = this.db.collection('files');
+    const id = new ObjectId(fileId);
+    const file = await files.findOne({ _id: id, userId });
+    return file;
+  }
+
   async getFiles(parentId, page) {
     if (!this.connected) {
       throw new Error('MongoDB client is not connected');

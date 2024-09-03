@@ -5,6 +5,7 @@ import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
 const mime = require('mime-types');
+const Bull = require('bull');
 
 class FilesController {
   static async postUpload(req, res) {
@@ -34,6 +35,7 @@ class FilesController {
       if (!data && type !== 'folder') {
         return res.status(400).json({ error: 'Missing data' });
       }
+
       const fileDocument = {
         userId,
         name,
@@ -42,6 +44,7 @@ class FilesController {
         isPublic,
         localPath,
       };
+
       if (fileDocument.parentId !== 0) {
         const parent = await dbClient.getFile(fileDocument.parentId);
         if (!parent || parent.type !== 'folder') {
@@ -61,6 +64,13 @@ class FilesController {
       fs.writeFileSync(localPath, data, 'base64');
 
       const newFile = await dbClient.createFile({ ...fileDocument });
+
+      // Start background processing for generating thumbnails if the type is 'image'
+      if (type === 'image') {
+        const fileQueue = new Bull('fileQueue');
+        await fileQueue.add({ userId, fileId: newFile.insertedId });
+      }
+
       return res.status(201).json({ ...fileDocument, id: newFile.insertedId });
     } catch (error) {
       console.error('Error creating new file:', error);
