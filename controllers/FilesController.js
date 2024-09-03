@@ -127,7 +127,7 @@ class FilesController {
   static async putUnpublish(req, res) {
     const token = req.headers['X-Token'];
     const { id } = req.params;
-
+    console.log(token);
     if (!token) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
