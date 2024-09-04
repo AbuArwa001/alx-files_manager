@@ -48,7 +48,7 @@ class UsersController {
     return user;
   }
 
-  static async me(req, res) {
+  static async getMe(req, res) {
     const token = req.headers['x-token'];
 
     if (!token) {
