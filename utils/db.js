@@ -91,7 +91,11 @@ class DBClient {
       { $match: query },
       { $skip: page > 0 ? ((page - 1) * 20) : 0 },
       { $limit: 20 },
-      { $project: { _id: 0, localPath: 0 } },
+      {
+        $project: {
+          id: '$_id', _id: 0, userId: 1, name: 1, type: 1, parentId: 1,
+        },
+      },
     ]);
     const filesList = await cursor.toArray();
     return filesList;
