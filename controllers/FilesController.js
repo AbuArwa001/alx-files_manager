@@ -118,20 +118,12 @@ class FilesController {
   static async putPublish(req, res) {
     const token = req.headers['x-token'];
     const { id } = req.params;
-
-    if (!token) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
     const userId = await redisClient.get(`auth_${token}`);
     const user = await dbClient.getUserById(userId);
-    if (!user) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+    if (!user) res.status(401).json({ error: 'Unauthorized' });
     try {
       const file = await dbClient.getFileById(id, userId);
-      if (!file) {
-        return res.status(404).json({ error: 'Not found' });
-      }
+      if (!file) return res.status(404).json({ error: 'Not found' });
       await dbClient.publishFile(id);
       return res.status(200).json({
         id: file._id, ...file, _id: undefined, localPath: undefined,
@@ -145,10 +137,6 @@ class FilesController {
   static async putUnpublish(req, res) {
     const token = req.headers['x-token'];
     const { id } = req.params;
-    if (!token) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-    console.log('token', token);
     try {
       const userId = await redisClient.get(`auth_${token}`);
       const user = await dbClient.getUserById(userId);

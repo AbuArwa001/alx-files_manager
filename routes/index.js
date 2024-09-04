@@ -23,7 +23,7 @@ router.post('/users', (req, res) => {
   UsersController.postNew(req, res);
 });
 router.get('/users/me', (req, res) => {
-  UsersController.me(req, res);
+  UsersController.getMe(req, res);
 });
 router.post('/files', (req, res) => {
   FilesController.postUpload(req, res);
