@@ -32,21 +32,15 @@ class AuthController {
 
   static async getDisconnect(req, res) {
     const token = req.headers['x-token'];
-
-    if (!token) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
     const key = `auth_${token}`;
     const userId = await redisClient.get(key);
-
-    if (!userId) {
+    const user = await dbClient.getUserById(userId);
+    if (!user) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
     await redisClient.del(key);
-
-    return res.status(204).send();
+    return res.status(204).send({});
   }
 }
 
