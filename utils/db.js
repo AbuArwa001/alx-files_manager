@@ -87,10 +87,11 @@ class DBClient {
     }
     const files = this.db.collection('files');
     const query = parentId ? { parentId } : {};
-    const cursor = files.aggregate([
+    const cursor = await files.aggregate([
       { $match: query },
       { $skip: page > 0 ? ((page - 1) * 20) : 0 },
       { $limit: 20 },
+      { $project: { _id: 0, localPath: 0 } },
     ]);
     const filesList = await cursor.toArray();
     return filesList;
