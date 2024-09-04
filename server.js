@@ -1,4 +1,5 @@
 import express from 'express';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import bodyParser from 'body-parser';
 import routes from './routes/index';
 

@@ -6,9 +6,10 @@ class AppController {
     try {
       const redis = redisClient.isAlive();
       const db = dbClient.isAlive();
-      res.status(200).send({ redis, db });
+      return res.status(200).send({ redis, db });
     } catch (error) {
       console.log(error);
+      return res.status(500).json({ redis: false, db: false });
     }
   }
 

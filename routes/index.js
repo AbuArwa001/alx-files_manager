@@ -7,8 +7,12 @@ import FilesController from '../controllers/FilesController';
 const router = express.Router();
 
 // Define the routes
-router.get('/status', AppController.getStatus);
-router.get('/stats', AppController.getStats);
+router.get('/status', (req, res) => {
+  AppController.getStatus(req, res);
+});
+router.get('/stats', (req, res) => {
+  AppController.getStats(req, res);
+});
 router.get('/connect', AuthController.getConnect);
 router.get('/disconnect', AuthController.getDisconnect);
 router.post('/users', UsersController.postNew);
