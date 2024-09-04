@@ -122,8 +122,13 @@ class FilesController {
     if (!token) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
+    const userId = await redisClient.get(`auth_${token}`);
+    const user = await dbClient.getUserById(userId);
+    if (!user) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
     try {
-      const file = await dbClient.getFile(id);
+      const file = await dbClient.getFileById(id, userId);
       if (!file) {
         return res.status(404).json({ error: 'Not found' });
       }
@@ -145,7 +150,12 @@ class FilesController {
     }
     console.log('token', token);
     try {
-      const file = await dbClient.getFile(id);
+      const userId = await redisClient.get(`auth_${token}`);
+      const user = await dbClient.getUserById(userId);
+      if (!user) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+      const file = await dbClient.getFileById(id, userId);
       if (!file) {
         return res.status(404).json({ error: 'Not found' });
       }
