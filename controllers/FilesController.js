@@ -194,12 +194,12 @@ class FilesController {
       }
 
       const data = fs.readFileSync(filePath);
-      const mimeType = mime.lookup(file.name);
-
-      return res.status(200).send(data).set('Content-Type', mimeType);
+      const mimeType = mime.contentType(file.name);
+      // const mimeType = mime.lookup(file.name);
+      res.setHeader('Content-Type', mimeType);
+      return res.status(200).send(data);
     } catch (error) {
-      console.error('Error getting file:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(404).send({ error: 'Not found' });
     }
   }
 }
